@@ -1,0 +1,5 @@
+# NumPy: operaciones matemáticas y generación de señales ULTIMO TAG
+numpy
+
+# Matplotlib: gráficos 2D para visualizar señales ULTIMO TAG
+matplotlib
