@@ -15,3 +15,15 @@ Este proyecto simula la digitalización de señales analógicas mediante muestre
 ## Requisitos
 ```bash
 pip install -r requirements.txt
+
+# Crear entorno virtual (recomendado)
+python -m venv env
+
+# Activar entorno (Windows)
+env\Scripts\activate
+
+# Activar entorno (Linux/macOS)
+source env/bin/activate
+
+# Instalar librerías
+pip install -r requirements.txt
