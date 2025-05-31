@@ -1,7 +1,8 @@
-Simulador de Conversión de Señales (ADC) - Grupo 17
+**Simulador de Conversión de Señales (ADC) - Grupo 17**
 
 Trabajo Práctico Integrador para Comunicación de Datos (UTN La Plata, S32, 2025).
-Integrantes
+
+**Integrantes**
 
 Baez Nahuel Maximiliano
 Crespo Milagros
@@ -9,7 +10,7 @@ Hrynkiewicz Cristian
 Jorge Ricardo Matias
 Mugetti Emmanuel
 
-Descripción
+**Descripción**
 Simulador de conversión de señales analógicas a digitales (ADC) en Python. Funcionalidades:
 
 Generar señales (seno, cuadrada, ruido).
@@ -19,16 +20,16 @@ Visualizar señales original, muestreada y cuantizada.
 Demostrar el Teorema de Nyquist y aliasing.
 Exportar gráficos como PNG.
 
-Requisitos
+**Requisitos**
 
 Python: 3.9+ (instalado automáticamente por los scripts).
 Librerías: numpy, matplotlib, scipy (en requirements.txt).
 Sistema operativo: Windows (recomendado) o Linux/WSL con servidor X11.
 Tkinter: Incluido en Windows; en Linux/WSL requiere python3-tk.
 
-Instalación y ejecución
+**Instalación y ejecución**
 Los scripts setup.ps1 (Windows) y setup.sh (Linux/WSL) automatizan la instalación de Git, Python, las librerías, y el clonado del repositorio.
-Windows
+**Windows**
 
 Abre PowerShell como administrador (busca "PowerShell" y selecciona "Ejecutar como administrador").
 Clona el repositorio:git clone https://github.com/naubaez/adc-simulador.git
@@ -44,7 +45,7 @@ python adc_simulator.py
 
 
 
-Linux/WSL (Ubuntu)
+**Linux/WSL (Ubuntu)**
 
 Abre una terminal en WSL.
 Clona el repositorio:git clone https://github.com/naubaez/adc-simulador.git
@@ -71,7 +72,7 @@ python3 adc_simulator.py
 
 
 
-Uso
+**Uso**
 
 Selecciona el tipo de señal (seno, cuadrada, ruido).
 Ingresa la frecuencia (ej. 1000 Hz).
@@ -80,21 +81,21 @@ Selecciona bits de cuantización (8, 16, 24).
 Haz clic en "Simular" para ver los gráficos.
 Usa "Exportar Gráfico" para guardar como PNG.
 
-Notas
+**Notas**
 
 Aliasing: Ocurre cuando la tasa de muestreo es menor a 2 * frecuencia (ej. fs=1500 Hz para f=1000 Hz). El programa lo detecta y lo muestra en los gráficos.
 Windows: Tkinter funciona nativamente, no requiere configuración adicional.
 Linux/WSL: Necesita un servidor X11 (como VcXsrv) para mostrar la interfaz gráfica.
 Ejecutable: Puedes generar un ejecutable para Windows (ver abajo).
 
-Generar ejecutable (Windows, opcional)
+**Generar ejecutable (Windows, opcional)**
 Para crear un ejecutable independiente:
 cd $env:USERPROFILE\Desktop\adc-simulador
 pip install pyinstaller
 pyinstaller --onefile adc_simulator.py
 
 El ejecutable estará en $env:USERPROFILE\Desktop\adc-simulador\dist\adc_simulator.exe.
-Estructura del proyecto
+**Estructura del proyecto**
 adc-simulador/
 ├── adc_simulator.py    # Código principal
 ├── requirements.txt    # Dependencias
