@@ -1,4 +1,5 @@
 Simulador de Conversión de Señales (ADC) - Grupo 17
+
 Trabajo Práctico Integrador para Comunicación de Datos (UTN La Plata, S32, 2025).
 Integrantes
 
