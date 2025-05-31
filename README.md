@@ -102,3 +102,4 @@ adc-simulador/
 ├── README.md          # Este archivo
 ├── .gitignore         # Ignora archivos innecesarios
 
+
