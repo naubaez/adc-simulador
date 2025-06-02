@@ -56,7 +56,7 @@ Simulador de conversión de señales analógicas a digitales (ADC) en Python. Fu
    ```
    Esto instala Git, Python, Tkinter, las librerías, y configura un entorno virtual.
 3. Configura X11 en WSL:
-   - Descarga VcXsrv ([sourceforge.net](https://sourceforge.net/projects/vcxsrv/)).
+   - Descarga VcXsrv ([vcxsrv.com](https://vcxsrv.com/)).
    - Inicia XLaunch con "Disable access control".
    - Configura DISPLAY:
      ```bash
