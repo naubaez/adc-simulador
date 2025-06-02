@@ -1,8 +1,0 @@
-# NumPy: operaciones matemáticas y generación de señales ULTIMO TAG - para ruido
-numpy
-
-# Matplotlib: gráficos 2D para visualizar señales ULTIMO TAG - pra señal seno
-matplotlib
-
-# para señal cuadrada
-scipy==1.x.x
