@@ -14,7 +14,7 @@ Este proyecto implementa un **simulador de conversión analógica-digital (ADC)*
 
 - Generar señales: **seno**, **cuadrada**, **ruido**, **triangular**, **diente de sierra**, y **modulada en amplitud (AM)**.
 - Simular **muestreo** con tasas como *8 kHz* o *44.1 kHz*.
-- Aplicar **cuantización** con *8*, *16*, o *24 bits*.
+- Aplicar **cuantización** con *8*, *16*, *24* o *32 bits*.
 - Visualizar señales: *original*, *muestreada*, y *cuantizada* en una interfaz con **desplazamiento vertical**.
 - Demostrar el **Teorema de Nyquist** y el fenómeno de **aliasing**.
 - Exportar gráficos como **PNG** (pendiente de implementación).
