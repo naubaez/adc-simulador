@@ -34,7 +34,7 @@ class ADCSimulator:
         # Selección de señal
         ttk.Label(self.scrollable_frame, text="Tipo de señal:").grid(row=0, column=0, padx=5, pady=5)
         self.signal_type = tk.StringVar(value="Seno")
-        signal_options = ["Seno", "Cuadrada", "Ruido", "Triangular", "Diente de sierra", "AM"]
+        signal_options = ["Seno", "Cuadrada", "Ruido", "Triangular", "Diente de sierra"]
         ttk.OptionMenu(self.scrollable_frame, self.signal_type, "Seno", *signal_options).grid(row=0, column=1, padx=5, pady=5)
 
         # Frecuencia
@@ -58,7 +58,7 @@ class ADCSimulator:
         ttk.Button(self.scrollable_frame, text="Simular", command=self.simulate).grid(row=4, column=0, columnspan=2, pady=10)
 
         # Área para gráficos
-        self.fig, self.ax = plt.subplots(3, 1, figsize=(8, 6))
+        self.fig, self.ax = plt.subplots(2, 1, figsize=(8, 6))
         self.canvas_plot = FigureCanvasTkAgg(self.fig, master=self.scrollable_frame)
         self.canvas_plot.get_tk_widget().grid(row=5, column=0, columnspan=2, padx=5, pady=5)
 
@@ -74,10 +74,6 @@ class ADCSimulator:
             return signal.sawtooth(2 * np.pi * freq * t, width=0.5)
         elif signal_type == "Diente de sierra":
             return signal.sawtooth(2 * np.pi * freq * t, width=1)
-        elif signal_type == "AM":
-            carrier = np.sin(2 * np.pi * 10 * freq * t)  # Portadora 10x frecuencia
-            modulator = 0.5 * (1 + np.sin(2 * np.pi * freq * t))  # Moduladora
-            return carrier * modulator
 
     def quantize(self, signal, bits):
         levels = 2 ** bits
@@ -104,8 +100,9 @@ class ADCSimulator:
             # Cuantización
             quantized_signal = self.quantize(sampled_signal, bits)
 
-            # Fijar el eje Y a [-1, 1] para mejor visualización
-            y_limit = 1.0
+            # Calcular límite dinámico del eje Y
+            y_max = max(np.max(np.abs(analog_signal)), np.max(np.abs(sampled_signal)), np.max(np.abs(quantized_signal)))
+            y_limit = max(1.0, y_max * 1.2)  # Mínimo 1.0 con margen del 20%
 
             # Graficar
             self.ax[0].clear()
@@ -117,20 +114,12 @@ class ADCSimulator:
 
             self.ax[1].clear()
             self.ax[1].stem(ts, sampled_signal, linefmt='b-', markerfmt='bo', label='Muestreada')
-            self.ax[1].set_title("Señal Muestreada")
+            self.ax[1].step(ts, quantized_signal, 'r-', where='post', label='Cuantizada')
+            self.ax[1].set_title(f"Señal Muestreada y Cuantizada ({bits} bits)")
             self.ax[1].set_xlabel("Tiempo (s)")
             self.ax[1].set_ylabel("Amplitud")
             self.ax[1].set_ylim(-y_limit, y_limit)
             self.ax[1].legend()
-
-            self.ax[2].clear()
-            self.ax[2].plot(ts, quantized_signal, 'r-', label='Cuantizada')
-            self.ax[2].stem(ts, quantized_signal, linefmt='r:', markerfmt='ro')
-            self.ax[2].set_title(f"Señal Cuantizada ({bits} bits)")
-            self.ax[2].set_xlabel("Tiempo (s)")
-            self.ax[2].set_ylabel("Amplitud")
-            self.ax[2].set_ylim(-y_limit, y_limit)
-            self.ax[2].legend()
 
             self.fig.tight_layout()
             self.canvas_plot.draw()
