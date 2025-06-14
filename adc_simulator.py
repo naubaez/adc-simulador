@@ -90,7 +90,7 @@ class ADCSimulator:
             signal_type = self.signal_type.get()
 
             # Generar señal
-            t = np.linspace(0, 0.005, int(fs * 0.005))  # 5ms
+            t = np.linspace(0, 0.005, int(freq * 0.005))  # 5ms
             analog_signal = self.generate_signal(t, freq, signal_type)
 
             # Muestreo
