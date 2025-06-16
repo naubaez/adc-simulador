@@ -90,11 +90,12 @@ class ADCSimulator:
             signal_type = self.signal_type.get()
 
             # Generar señal
-            t = np.linspace(0, 0.005, int(fs * 0.005))  # 5ms
+            t = np.linspace(0, 2/freq, 10000)  # Generar 2 período completo de la señal
+            #t = np.arange(0, 0.005, 1/fs)
             analog_signal = self.generate_signal(t, freq, signal_type)
 
             # Muestreo
-            ts = np.arange(0, 0.005, 1/fs)
+            ts = np.arange(0, 2/freq, 1/fs)
             sampled_signal = self.generate_signal(ts, freq, signal_type)
 
             # Cuantización
