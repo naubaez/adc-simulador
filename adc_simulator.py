@@ -1,5 +1,5 @@
 import tkinter as tk
-from tkinter import ttk
+from tkinter import ttk, messagebox
 import numpy as np
 from scipy import signal
 import matplotlib.pyplot as plt
@@ -57,10 +57,12 @@ class ADCSimulator:
         # Botón Simular
         ttk.Button(self.scrollable_frame, text="Simular", command=self.simulate).grid(row=4, column=0, columnspan=2, pady=10)
 
+        # Botón Exportar
+        ttk.Button(self.scrollable_frame, text="Exportar Gráfico", command=self.export_plot).grid(row=5, column=0, columnspan=2, pady=5)
         # Área para gráficos
         self.fig, self.ax = plt.subplots(2, 1, figsize=(8, 6))
         self.canvas_plot = FigureCanvasTkAgg(self.fig, master=self.scrollable_frame)
-        self.canvas_plot.get_tk_widget().grid(row=5, column=0, columnspan=2, padx=5, pady=5)
+        self.canvas_plot.get_tk_widget().grid(row=6, column=0, columnspan=2, padx=5, pady=5)
 
     def generate_signal(self, t, freq, signal_type):
         if signal_type == "Seno":
@@ -90,8 +92,10 @@ class ADCSimulator:
             signal_type = self.signal_type.get()
 
             # Generar señal
-            t = np.linspace(0, 2/freq, 10000)  # Generar 2 período completo de la señal
+            #t = np.linspace(0, 2/freq, 10000)  # Generar 2 período completo de la señal
             #t = np.arange(0, 0.005, 1/fs)
+            # Generar señal analógica con resolución dinámica
+            t = np.linspace(0, 2/freq, int(2000 * freq / 1000))
             analog_signal = self.generate_signal(t, freq, signal_type)
 
             # Muestreo
@@ -101,6 +105,10 @@ class ADCSimulator:
             # Cuantización
             quantized_signal = self.quantize(sampled_signal, bits)
 
+             # Verificar aliasing (Nyquist: fs >= 2 * freq)
+            if fs < 2 * freq:
+                messagebox.showwarning("Advertencia", f"Aliasing detectado: La tasa de muestreo ({fs} Hz) es menor que 2 * frecuencia ({2 * freq} Hz).")
+                                                         
             # Calcular límite dinámico del eje Y
             y_max = max(np.max(np.abs(analog_signal)), np.max(np.abs(sampled_signal)), np.max(np.abs(quantized_signal)))
             y_limit = max(1.0, y_max * 1.2)  # Mínimo 1.0 con margen del 20%
@@ -130,6 +138,22 @@ class ADCSimulator:
         except Exception as e:
             tk.messagebox.showerror("Error", str(e))
 
+    def export_plot(self):
+        try:
+            freq = float(self.freq.get())
+            fs = float(self.fs.get())
+            bits = int(self.bits.get())
+            signal_type = self.signal_type.get()
+
+            # Crear nombre de archivo con parámetros
+            filename = f"simulacion_{signal_type}_freq_{freq}_fs_{fs}_bits_{bits}.png"
+            
+            # Exportar ambos gráficos
+            self.fig.savefig(filename, dpi=300, bbox_inches='tight')
+            messagebox.showinfo("Éxito", f"Gráfico exportado como {filename}")
+
+        except Exception as e:
+            messagebox.showerror("Error", "No se pudo exportar el gráfico. Asegúrate de simular primero.")
 if __name__ == "__main__":
     root = tk.Tk()
     app = ADCSimulator(root)
