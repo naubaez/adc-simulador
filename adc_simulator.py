@@ -36,7 +36,7 @@ class ADCSimulator:
         self.signal_type = tk.StringVar(value="Seno")
         signal_options = ["Seno", "Cuadrada", "Ruido", "Triangular", "Diente de sierra"]
         ttk.OptionMenu(self.scrollable_frame, self.signal_type, "Seno", *signal_options).grid(row=0, column=1, padx=5, pady=5)
-
+        
         # Frecuencia
         ttk.Label(self.scrollable_frame, text="Frecuencia (Hz):").grid(row=1, column=0, padx=5, pady=5)
         self.freq = tk.Entry(self.scrollable_frame)
@@ -51,19 +51,27 @@ class ADCSimulator:
 
         # Bits de cuantización
         ttk.Label(self.scrollable_frame, text="Bits de cuantización:").grid(row=3, column=0, padx=5, pady=5)
-        self.bits = tk.StringVar(value="8")
-        ttk.OptionMenu(self.scrollable_frame, self.bits, "8", "8", "16", "24", "32").grid(row=3, column=1, padx=5, pady=5)
+        self.bits = tk.StringVar(value="4")
+        bit_options = ["4", "8", "16", "24", "32"]  # Lista de opciones
+        ttk.OptionMenu(self.scrollable_frame, self.bits, "4", *bit_options).grid(row=3, column=1, padx=5, pady=5)
+
+        # Checkbox para aplicar dithering
+        ttk.Label(self.scrollable_frame, text="Opciones:").grid(row=4, column=0, padx=5, pady=5)
+        self.use_dither = tk.BooleanVar()
+
+        ttk.Checkbutton(self.scrollable_frame, text="Aplicar dithering", variable=self.use_dither).grid(row=4, column=1, padx=5, pady=5)
 
         # Botón Simular
-        ttk.Button(self.scrollable_frame, text="Simular", command=self.simulate).grid(row=4, column=0, columnspan=2, pady=10)
-
+        ttk.Button(self.scrollable_frame, text="Simular", command=self.simulate).grid(row=5, column=0, columnspan=2, pady=10)
+       
         # Botón Exportar
-        ttk.Button(self.scrollable_frame, text="Exportar Gráfico", command=self.export_plot).grid(row=5, column=0, columnspan=2, pady=5)
+        ttk.Button(self.scrollable_frame, text="Exportar Gráfico", command=self.export_plot).grid(row=6, column=0, columnspan=2, pady=5)
+
         # Área para gráficos
         self.fig, self.ax = plt.subplots(2, 1, figsize=(8, 6))
         self.canvas_plot = FigureCanvasTkAgg(self.fig, master=self.scrollable_frame)
-        self.canvas_plot.get_tk_widget().grid(row=6, column=0, columnspan=2, padx=5, pady=5)
-
+        self.canvas_plot.get_tk_widget().grid(row=7, column=0, columnspan=2, padx=5, pady=5)
+         
     def generate_signal(self, t, freq, signal_type):
         if signal_type == "Seno":
             return np.sin(2 * np.pi * freq * t)
@@ -77,13 +85,22 @@ class ADCSimulator:
         elif signal_type == "Diente de sierra":
             return signal.sawtooth(2 * np.pi * freq * t, width=1)
 
-    def quantize(self, signal, bits):
+    def quantize(self, signal, bits, apply_dither=False): #apply_ditther es flag que permite controlar si se aplica dither o no desde un checkbox
+
         levels = 2 ** bits
         signal_max = np.max(np.abs(signal))
+        if signal_max == 0:
+            signal_max = 1.0  # evita división por cero
+
         step = 2 * signal_max / levels
+
+        if apply_dither:
+            dither = np.random.uniform(-step / 2, step / 2, size=signal.shape) # size=signal.shape garantiza que el dither tenga la misma forma que la señal
+            signal = signal + dither
+
         quantized = np.round(signal / step) * step
         return quantized
-
+   
     def simulate(self):
         try:
             freq = float(self.freq.get())
@@ -91,10 +108,7 @@ class ADCSimulator:
             bits = int(self.bits.get())
             signal_type = self.signal_type.get()
 
-            # Generar señal
-            #t = np.linspace(0, 2/freq, 10000)  # Generar 2 período completo de la señal
-            #t = np.arange(0, 0.005, 1/fs)
-            # Generar señal analógica con resolución dinámica
+            # Generar señal de 2 períodos completos con resolución dinámica
             t = np.linspace(0, 2/freq, int(2000 * freq / 1000))
             analog_signal = self.generate_signal(t, freq, signal_type)
 
@@ -103,7 +117,9 @@ class ADCSimulator:
             sampled_signal = self.generate_signal(ts, freq, signal_type)
 
             # Cuantización
-            quantized_signal = self.quantize(sampled_signal, bits)
+            #quantized_signal = self.quantize(sampled_signal, bits)
+            # Cuantización con dithering opcional
+            quantized_signal = self.quantize(sampled_signal, bits, apply_dither=self.use_dither.get())
 
              # Verificar aliasing (Nyquist: fs >= 2 * freq)
             if fs < 2 * freq:
