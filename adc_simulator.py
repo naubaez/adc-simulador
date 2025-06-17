@@ -124,7 +124,8 @@ class ADCSimulator:
              # Verificar aliasing (Nyquist: fs >= 2 * freq)
             if fs < 2 * freq:
                 messagebox.showwarning("Advertencia", f"Aliasing detectado: La tasa de muestreo ({fs} Hz) es menor que 2 * frecuencia ({2 * freq} Hz).")
-                                                         
+                if self.use_dither.get():
+                    messagebox.showinfo("Nota", "El dithering puede reducir distorsiones en caso de aliasing.")                                         
             # Calcular límite dinámico del eje Y
             y_max = max(np.max(np.abs(analog_signal)), np.max(np.abs(sampled_signal)), np.max(np.abs(quantized_signal)))
             y_limit = max(1.0, y_max * 1.2)  # Mínimo 1.0 con margen del 20%
@@ -139,13 +140,12 @@ class ADCSimulator:
 
             self.ax[1].clear()
             self.ax[1].stem(ts, sampled_signal, linefmt='b-', markerfmt='bo', label='Muestreada')
-            self.ax[1].step(ts, quantized_signal, 'r-', where='post', label='Cuantizada')
-            self.ax[1].set_title(f"Señal Muestreada y Cuantizada ({bits} bits)")
+            self.ax[1].step(ts, quantized_signal, 'r-', where='post', label=f'Cuantizada ({bits} bits{" con dither" if self.use_dither.get() else ""})')
+            self.ax[1].set_title("Señal Muestreada y Cuantizada")
             self.ax[1].set_xlabel("Tiempo (s)")
             self.ax[1].set_ylabel("Amplitud")
-            self.ax[1].set_ylim(-y_limit, y_limit)
+            self.ax[1].set_ylim(-y_limit, y_limit)  # Rango fijo para resaltar cuantización
             self.ax[1].legend()
-
             self.fig.tight_layout()
             self.canvas_plot.draw()
 
