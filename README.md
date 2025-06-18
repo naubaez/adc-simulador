@@ -12,12 +12,12 @@
 ## **Descripción**
 Este proyecto implementa un **simulador de conversión analógica-digital (ADC)** en *Python*. Permite:
 
-- Generar señales: **seno**, **cuadrada**, **ruido**, **triangular**, **diente de sierra**, y **modulada en amplitud (AM)**.
+- Generar señales: **seno**, **cuadrada**, **ruido**, **triangular**, **diente de sierra**.
 - Simular **muestreo** con tasas como *8 kHz* o *44.1 kHz*.
 - Aplicar **cuantización** con *4*, *8*, *16*, *24* o *32 bits*.
 - Visualizar señales: *original*, *muestreada*, y *cuantizada* en una interfaz con **desplazamiento vertical**.
 - Demostrar el **Teorema de Nyquist** y el fenómeno de **aliasing**.
-- Exportar gráficos como **PNG** (pendiente de implementación).
+- Exportar gráficos como **PNG** (opcional).
 
 ## **Requisitos**
 
