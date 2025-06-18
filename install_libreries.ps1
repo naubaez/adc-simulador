@@ -21,11 +21,11 @@ Write-Host "Git $gitVersion encontrado." -ForegroundColor Green
 
 # instala librerias necesarias (solo si Git y Python están OK)
 # Verificar librerías de Python
-Write-Host "Verificando e instalando librerías requeridas..."
+Write-Host "Verificando e instalando librerias requeridas..."
 python -m pip install --upgrade pip
 python -m pip install numpy==2.2.6 matplotlib==3.10.3 scipy==1.15.3
 
-Write-Host "`n Configuracion finalizada (o intentada)." -ForegroundColor Cyan
+Write-Host "`Configuracion finalizada (o intentada)." -ForegroundColor Cyan
 Write-Host " Si las librerias se instalaron, ejecuta 'python adc_simulator.py' desde el directorio del repositorio." -ForegroundColor Magenta
 Write-Host "Presiona cualquier tecla para salir..." -ForegroundColor Gray
 $host.UI.RawUI.ReadKey("NoEcho,IncludeKeyDown") | Out-Null
